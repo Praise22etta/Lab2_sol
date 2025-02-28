@@ -39,6 +39,23 @@ app.use(function ( req, res, next) {
     res.send('This page does not exist!')
 });
 
+app.get('/api/storeQuote', function(req, res){
+
+    //res.send("Hello world!")
+
+    // Copied from front end
+
+    var n = req.query.quoteName
+
+    var s = req.query.salary;
+
+    var d = req.query.days;
+
+    console.log("Storing quote: "+n+" "+s+" "+d)
+
+    console.log("Mongo URI is "+uri)
+});
+
 app.listen(8000, function () {
     console.log('Listening on http://localhost:8000/');
 });
