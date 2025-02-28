@@ -4,6 +4,9 @@ var path = require('path');
 var express = require('express');
 var app = express();
 
+const{ MongoClient } = require("mongodb");
+const uri = "mongodb://127.0.0.127017"
+
 var options = {
     index: "myWebPage.html"
   };
@@ -55,6 +58,47 @@ app.get('/api/storeQuote', function(req, res){
 
     console.log("Mongo URI is "+uri)
 });
+
+
+// Database stuff
+    // Create a new MongoClient
+    const client = new MongoClient(uri);
+    async function run() {
+    try {
+        // Connect the client to the server (optional starting in v4.7)
+        //await client.connect();
+        // Establish and verify connection
+        //await client.db("admin").command({ ping: 1 });
+        //console.log("Connected successfully to server");
+        console.log('Start the database stuff');
+        //Write databse Insert/Update/Query code here..
+        var dbo = client.db("mydb");
+        var myobj = { quoteName: n, salary: s, days: d };
+        await dbo.collection("quotes").insertOne(myobj, function(err, res) {
+            if (err) {
+                console.log(err); 
+                throw err;
+            }
+            console.log("1 quote inserted");
+        }); 
+        console.log('End the database stuff');
+ 
+    } finally {
+        // Ensures that the client will close when you finish/error
+        await client.close();
+    }
+    }
+
+
+    run().catch(console.dir);
+
+app.use(express.static(dir,options));
+
+    //404
+app.use(function(req, res, next){
+    res.send('This page does not exist')
+});
+   
 
 app.listen(8000, function () {
     console.log('Listening on http://localhost:8000/');
